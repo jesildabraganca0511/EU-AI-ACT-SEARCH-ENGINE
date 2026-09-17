@@ -1,0 +1,26 @@
+[project]
+name = "eu-ai-act-search-engine"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Jesilda Braganca", email = "jesildabraganca@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "chromadb>=1.5.9",
+    "datasets>=5.0.1",
+    "fastapi>=0.141.1",
+    "pdfplumber>=0.11.10",
+    "python-dotenv>=1.2.3",
+    "ragas>=0.4.3",
+    "requests>=2.34.2",
+    "sentence-transformers>=6.0.1",
+]
+
+[project.scripts]
+eu-ai-act-search-engine = "eu_ai_act_search_engine:main"
+
+[build-system]
+requires = ["uv_build>=0.12.15,<0.13.0"]
+build-backend = "uv_build"
