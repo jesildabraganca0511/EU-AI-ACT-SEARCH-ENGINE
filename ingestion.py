@@ -52,6 +52,42 @@ def extract_clean_text(pdf_path):
 
 
 
+def chunk_text(full_text):
+
+    article_pattern = re.compile(r"^Article (\d+)\s*$", re.MULTILINE)
+
+    matches=list(article_pattern.finditer(full_text))
+    articles=[]
+
+    for i,match in enumerate(matches):
+        article_number=match.group(1)
+        start_index=match.end()
+        end_index=match[i+1].start() if i+1<len(matches) else len(full_text)
+
+
+        article_text=full_text[start_index:end_index].strip()
+
+        lines=article_text.split("\n",1)
+        article_title = lines[0].strip() if lines else ""
+        article_body = lines[1].strip() if len(lines) > 1 else ""
+
+        articles.append({
+            "article_number": f"Article {article_number}",
+            "article_title": article_title,
+            "text": article_body,
+        })
+ 
+    return articles
+
+
+
+
+
+
+
+
+
+
 
     
     
