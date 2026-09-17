@@ -13,7 +13,7 @@ LOCAL_PATH="eu_ai_act.pdf"
 OUTPUT_PATH = "eu_ai_output.json"
 
 
-def get_pdf(PDF_URL,LOCAL_FILE):
+def get_pdf():
     if LOCAL_FILE:
         return LOCAL_FILE
 
@@ -48,6 +48,8 @@ def extract_clean_text(pdf_path):
 
     full_text= "\n".join(text_list)
 
+
+
     return full_text
 
 
@@ -62,7 +64,7 @@ def chunk_text(full_text):
     for i,match in enumerate(matches):
         article_number=match.group(1)
         start_index=match.end()
-        end_index=match[i+1].start() if i+1<len(matches) else len(full_text)
+        end_index=matches[i+1].start() if i+1<len(matches) else len(full_text)
 
 
         article_text=full_text[start_index:end_index].strip()
@@ -79,18 +81,61 @@ def chunk_text(full_text):
  
     return articles
 
+def split_into_annexes(annex_text):
+    annex_pattern = re.compile(r"^ANNEX ([IVXLC]+)\s*$", re.MULTILINE)
+    matches=list(annex_pattern.finditer(annex_text))
+
+    annexes=[]
+
+    for i,match in enumerate(matches):
+        annex_number=match.group(1)
+        start_index=match.start()
+        end_index=matches[i+1].start() if i+1<len(matches) else len(annex_text)
+
+        annex_content=annex_text[start_index:end_index].strip()
+
+        lines=annex_content.split("\n",1)
+        annex_title = lines[0].strip() if lines else ""
+        annex_body = lines[1].strip() if len(lines) > 1 else ""     
+
+        annexes.append({
+            "article_number": f"Annex {annex_number}",
+            "article_title": annex_title,
+            "text": annex_body,
+        })          
+
+    return annexes
 
 
+if __name__ == "__main__":
+    pdf_path = get_pdf()
+    full_text = extract_clean_text(pdf_path)
+    annex_start = full_text.find("ANNEX I")
+
+    if annex_start== -1:
+        print("did not find annexure, using full text")
+        body_text,annex_text=full_text,""
+
+    else:
+        annex_text=full_text[annex_start:]
+        body_text=full_text[:annex_start]
 
 
-
-
-
-
-
-
-    
-    
+    articles = chunk_text(body_text)
+    annexes = split_into_annexes(annex_text)
+    all_sections = articles + annexes
+ 
+    print(f"Found {len(articles)} articles (expected 113).")
+    print(f"Found {len(annexes)} annexes (expected 13).")
+    print("First article found:", articles[0]["article_number"], "-", articles[0]["article_title"])
+    if annexes:
+        print("First annex found:", annexes[0]["article_number"], "-", annexes[0]["article_title"])
+ 
+    with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
+        json.dump(all_sections, f, indent=2, ensure_ascii=False)
+ 
+    print(f"Saved {len(all_sections)} sections (articles + annexes) to {OUTPUT_PATH}")
+ 
 
 
 
