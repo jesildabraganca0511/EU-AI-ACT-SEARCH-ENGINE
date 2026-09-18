@@ -2,28 +2,28 @@ import re
 import json
 import pdfplumber
 import requests
+from pathlib import Path
 from langchain_community.document_loaders import PyPDFLoader
 
 
 
-
+PROJECT_ROOT=Path(__file__).resolve().parents[2]
 PDF_URL = "https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:32024R1689"
 LOCAL_FILE= None
-LOCAL_PATH="eu_ai_act.pdf"
-OUTPUT_PATH = "results/eu_ai_output.json"
-
+LOCAL_PATH=PROJECT_ROOT/"eu_ai_act.pdf"
+OUTPUT_PATH = PROJECT_ROOT / "src" / "eu_ai_act_search_engine" / "results" / "eu_ai_output.json"
 
 def get_pdf():
-    if LOCAL_FILE:
-        return LOCAL_FILE
+    if LOCAL_PATH.exists():
+        print(f"Using local pdf from{LOCAL_PATH}")
+        return LOCAL_PATH
 
     
     print("Downloading AI Act PDF from EUR-Lex...")
     response=requests.get(PDF_URL,timeout=300)
     response.raise_for_status()
-    with open(LOCAL_PATH, 'wb') as f:
-        f.write(response.content)
-    return LOCAL_PATH
+    LOCAL_PATH.write_bytes(response.content )
+    return str(LOCAL_PATH)
 
 
 def extract_clean_text(pdf_path):
@@ -127,7 +127,8 @@ if __name__ == "__main__":
  
     print(f"Found {len(articles)} articles (expected 113).")
     print(f"Found {len(annexes)} annexes (expected 13).")
-    print("First article found:", articles[0]["article_number"], "-", articles[0]["article_title"])
+    if articles:
+        print("First article found:", articles[0]["article_number"], "-", articles[0]["article_title"])
     if annexes:
         print("First annex found:", annexes[0]["article_number"], "-", annexes[0]["article_title"])
  
