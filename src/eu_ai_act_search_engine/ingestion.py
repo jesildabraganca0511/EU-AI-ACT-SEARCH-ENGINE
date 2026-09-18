@@ -10,7 +10,7 @@ from langchain_community.document_loaders import PyPDFLoader
 PDF_URL = "https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:32024R1689"
 LOCAL_FILE= None
 LOCAL_PATH="eu_ai_act.pdf"
-OUTPUT_PATH = "eu_ai_output.json"
+OUTPUT_PATH = "results/eu_ai_output.json"
 
 
 def get_pdf():
