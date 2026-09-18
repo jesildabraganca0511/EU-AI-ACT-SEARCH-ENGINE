@@ -1,8 +1,10 @@
 import json
 
+from anyio import Path
 
-INPUT_PATH = "results/eu_ai_output.json"
-OUTPUT_PATH = "results/eu_ai_output_chunked.json"
+PROJECT_ROOT=Path(__file__).resolve().parents[2]
+INPUT_PATH = PROJECT_ROOT / "src" / "eu_ai_act_search_engine" / "results" / "eu_ai_output.json"
+OUTPUT_PATH = PROJECT_ROOT / "src" / "eu_ai_act_search_engine" / "results" / "eu_ai_output_chunked.json"
 
 
 
