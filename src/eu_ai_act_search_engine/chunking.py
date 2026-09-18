@@ -1,6 +1,8 @@
 import json
 
-from anyio import Path
+from pathlib import Path
+
+from sqlalchemy import text
 
 PROJECT_ROOT=Path(__file__).resolve().parents[2]
 INPUT_PATH = PROJECT_ROOT / "src" / "eu_ai_act_search_engine" / "results" / "eu_ai_output.json"
@@ -9,25 +11,26 @@ OUTPUT_PATH = PROJECT_ROOT / "src" / "eu_ai_act_search_engine" / "results" / "eu
 
 
 def chunk_text(text,chunk_size=1000,overlap=100):
-    chunks=[]
+        if text is None or len(text) == 0:
+            return []
 
-
-    if text is None or len(text)==0:
-        return chunks
-
-    else:
         if len(text) <= chunk_size:
             return [text]
 
+        if overlap >= chunk_size:
+            raise ValueError("overlap must be smaller than chunk_size")
+        chunks=[]
         start = 0
         while start < len(text):
-            end = start + chunk_size
+            end = min(start + chunk_size,len(text))
             chunk = text[start:end]
             chunks.append(chunk)
+            if end == len(text):
+                break
 
             start += chunk_size - overlap
         
-            return chunks
+        return chunks
 
 
 def chunk_articles(articles):
@@ -51,21 +54,23 @@ def chunk_articles(articles):
 
 
 if __name__=="__main__":
+    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+
     with open(INPUT_PATH,"r", encoding="utf-8") as f:
         articles=json.load(f)
         print(f"Loaded {len(articles)} articles.")
+    if articles:
+        chunks = chunk_articles(articles)
+        print(f"Split into {len(chunks)} chunks.")
  
-    chunks = chunk_articles(articles)
-    print(f"Split into {len(chunks)} chunks.")
- 
-    if chunks:
-        print("\nFirst chunk example:")
-        print(chunks[0]["text"][:200])
-        print(f"Article: {chunks[0]['article_number']} - {chunks[0]['article_title']}")
-        print(f"Chunk {chunks[0]['chunk_index'] + 1} of {chunks[0]['total_chunks_in_article']}")
- 
-    with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
-        json.dump(chunks, f, indent=2, ensure_ascii=False)
+        if chunks:
+            print("\nFirst chunk example:")
+            print(chunks[0]["text"][:200])
+            print(f"Article: {chunks[0]['article_number']} - {chunks[0]['article_title']}")
+            print(f"Chunk {chunks[0]['chunk_index'] + 1} of {chunks[0]['total_chunks_in_article']}")
+    
+        with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
+            json.dump(chunks, f, indent=2, ensure_ascii=False)
  
     print(f"\nSaved {len(chunks)} chunks to {OUTPUT_PATH}")
  
