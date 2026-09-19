@@ -20,3 +20,9 @@ class Settings(BaseSettings):
     gemini_model:Literal["gemini-3.6-flash","gemini-2.0-flash"]="gemini-3.6-flash"
 
     embedding_model_name:str="all-MiniLM-L6-v2"
+
+    chroma_path:Path=PROJECT_ROOT / "src" / "eu_ai_act_search_engine" / "results" / "chroma_db"
+
+    collection_name:str="eu_ai_act_articles"
+    
+
