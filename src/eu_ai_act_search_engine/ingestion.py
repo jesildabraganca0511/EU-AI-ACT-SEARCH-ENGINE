@@ -4,6 +4,7 @@ import pdfplumber
 import requests
 from pathlib import Path
 from langchain_community.document_loaders import PyPDFLoader
+from .validation import Article,Chunk,SearchQuery
 
 
 
@@ -79,7 +80,10 @@ def chunk_text(full_text):
             "text": article_body,
         })
  
-    return articles
+    return [
+        Article.model_validate(article)
+        for article in articles
+    ]
 
 def split_into_annexes(annex_text):
     annex_pattern = re.compile(r"^ANNEX ([IVXLC]+)\s*$", re.MULTILINE)
@@ -104,7 +108,10 @@ def split_into_annexes(annex_text):
             "text": annex_body,
         })          
 
-    return annexes
+    return [
+        Article.model_validate(annex)
+        for annex in annexes
+    ]
 
 
 if __name__ == "__main__":
@@ -123,7 +130,10 @@ if __name__ == "__main__":
 
     articles = chunk_text(body_text)
     annexes = split_into_annexes(annex_text)
-    all_sections = articles + annexes
+    all_sections = [
+    Article.model_validate(section)
+    for section in articles + annexes
+]
  
     print(f"Found {len(articles)} articles (expected 113).")
     print(f"Found {len(annexes)} annexes (expected 13).")
@@ -133,7 +143,12 @@ if __name__ == "__main__":
         print("First annex found:", annexes[0]["article_number"], "-", annexes[0]["article_title"])
  
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
-        json.dump(all_sections, f, indent=2, ensure_ascii=False)
+        json.dump(
+    [section.model_dump() for section in all_sections],
+    f,
+    indent=2,
+    ensure_ascii=False,
+)
  
     print(f"Saved {len(all_sections)} sections (articles + annexes) to {OUTPUT_PATH}")
  
