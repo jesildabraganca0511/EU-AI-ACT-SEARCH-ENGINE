@@ -79,12 +79,22 @@ Answer:"""
     return prompt
 
 
-def generate(prompt):
-    response = genai_client.models.generate_content(
-        model=GEMINI_MODEL,
-        contents=prompt,
-    )
-    return response.text
+def generate(prompt,max_retries=2):
+    for attempt in range(max_retries):
+        try:
+            response = genai_client.models.generate_content(
+                model=GEMINI_MODEL,
+                contents=prompt,
+            )
+            return response.text
+        except Exception as e:
+            if attempt < max_retries - 1:
+                wait_time = 2 ** attempt  
+                print(f"Generation failed ({e}), retrying in {wait_time}s...")
+                time.sleep(wait_time)
+            else:
+                raise  
+    raise RuntimeError("Failed to generate response after multiple retries")
  
  
 # --- Wire it all together, with latency logging per stage ------------------
@@ -122,13 +132,19 @@ if __name__ == "__main__":
     ]
  
     for question in test_questions:
-        result = ask(question)
-        print("=" * 70)
-        print("Q:", result["query"])
-        print("\nA:", result["answer"])
-        print("\nSources:", result["sources"])
-        print("Latency:", result["latency"])
-        print()
+        try:
+            result = ask(question)
+            print("=" * 70)
+            print("Q:", result["query"])
+            print("\nA:", result["answer"])
+            print("\nSources:", result["sources"])
+            print("Latency:", result["latency"])
+            print()
+        except Exception as e:
+            print("=" * 70)
+            print("Q:", question)
+            print(f"FAILED: {e}")
+            print()
  
 
 
