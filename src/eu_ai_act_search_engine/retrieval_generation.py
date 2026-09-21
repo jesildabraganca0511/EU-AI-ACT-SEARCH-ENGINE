@@ -118,6 +118,7 @@ def ask(query, top_k=TOP_K):
         "query": query,
         "answer": answer,
         "sources": [c["article_number"] for c in chunks],
+        "contexts": [c["text"] for c in chunks],
         "latency": latency,
     }
  
