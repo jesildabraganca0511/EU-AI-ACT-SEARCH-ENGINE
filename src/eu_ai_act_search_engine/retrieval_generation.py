@@ -89,7 +89,7 @@ def generate(prompt,max_retries=2):
             return response.text
         except Exception as e:
             if attempt < max_retries - 1:
-                wait_time = 2 ** attempt  
+                wait_time = 60  
                 print(f"Generation failed ({e}), retrying in {wait_time}s...")
                 time.sleep(wait_time)
             else:
