@@ -1,5 +1,5 @@
 import json
-from time import time
+import time 
 
 from .retrieval_generation import ask
 
