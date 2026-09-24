@@ -3,7 +3,7 @@ import time
 from pathlib import Path
 import chromadb
 from sentence_transformers import SentenceTransformer
-from google import genai
+from groq import Groq
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -17,7 +17,7 @@ CHROMA_PATH= PROJECT_ROOT / "src" / "eu_ai_act_search_engine" / "results" / "chr
 COLLECTION_NAME = "eu_ai_act_articles"
 
 
-GEMINI_MODEL = "gemini-2.5-flash"           # fast + cheap, good for a baseline
+GROQ_MODEL = "llama-3.3-70b-versatile"           # fast + cheap, good for a baseline
 TOP_K = 5
  
  
@@ -27,10 +27,8 @@ embedding_model = SentenceTransformer(EMBEDDING_MODEL_NAME)
 chroma_client = chromadb.PersistentClient(path=CHROMA_PATH)
 collection = chroma_client.get_collection(COLLECTION_NAME)
  
-# Reads GEMINI_API_KEY from the environment automatically.
-genai_client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
-
-
+# Reads GROQ_API_KEY from the environment automatically.
+groq_client = Groq(api_key=os.environ["GROQ_API_KEY"])
 
 def retrieve(query, top_k=TOP_K):
     query_embedding = embedding_model.encode([query]).tolist()
@@ -79,24 +77,23 @@ Answer:"""
     return prompt
 
 
-def generate(prompt,max_retries=2):
+
+def generate(prompt, max_retries=3):
     for attempt in range(max_retries):
         try:
-            response = genai_client.models.generate_content(
-                model=GEMINI_MODEL,
-                contents=prompt,
+            response = groq_client.chat.completions.create(
+                model=GROQ_MODEL,
+                messages=[{"role": "user", "content": prompt}],
             )
-            return response.text
+            return response.choices[0].message.content
         except Exception as e:
             if attempt < max_retries - 1:
-                wait_time = 60  
+                wait_time = 60
                 print(f"Generation failed ({e}), retrying in {wait_time}s...")
                 time.sleep(wait_time)
             else:
-                raise  
+                raise
     raise RuntimeError("Failed to generate response after multiple retries")
- 
- 
 # --- Wire it all together, with latency logging per stage ------------------
  
 def ask(query, top_k=TOP_K):
