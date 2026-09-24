@@ -17,7 +17,7 @@ CHROMA_PATH= PROJECT_ROOT / "src" / "eu_ai_act_search_engine" / "results" / "chr
 COLLECTION_NAME = "eu_ai_act_articles"
 
 
-GEMINI_MODEL = "gemini-3.6-flash"           # fast + cheap, good for a baseline
+GEMINI_MODEL = "gemini-2.5-flash"           # fast + cheap, good for a baseline
 TOP_K = 5
  
  
