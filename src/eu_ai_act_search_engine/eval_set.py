@@ -179,11 +179,13 @@ EVAL_QUESTIONS = [
         ),
     },
 ]
+
+EVAL_QUESTION_LIMIT = 5
  
 
 def run_eval_set():
     results = []
-    for item in EVAL_QUESTIONS:
+    for item in EVAL_QUESTIONS[:EVAL_QUESTION_LIMIT]:
         print(f"Running: {item['question']}")
         try:
             result = ask(item["question"])

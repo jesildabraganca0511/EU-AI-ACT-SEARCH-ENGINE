@@ -1,0 +1,78 @@
+user_input,response,reference,faithfulness,context_precision,context_recall,answer_relevancy
+What are the requirements for high-risk AI systems?,"**Requirements for high‑risk AI systems under the EU AI Act (as set out in the cited articles)**  
+
+1. **Accuracy, robustness and cybersecurity**  
+   * The system must be designed and developed to achieve an **appropriate level of accuracy, robustness and cybersecurity** and to maintain that performance consistently throughout its lifecycle. [Article 15]  
+   * Providers must adopt **technical and organisational measures** to protect the system against errors, faults, inconsistencies, and unauthorised third‑party interference. [Article 15]  
+   * **Technical redundancy** (e.g., backup or fail‑safe plans) may be used to achieve robustness. [Article 15]  
+   * If the system continues to learn after deployment, it must be built so that **feedback‑loop risks (biased outputs influencing future inputs) are eliminated or reduced** and any remaining loops are mitigated. [Article 15]  
+
+2. **Transparency and information to deployers**  
+   * Providers must supply deployers with clear information on:  
+     - the **intended purpose** of the system; [Article 13]  
+     - the **level of accuracy**, the **metrics used**, the **robustness** and **cybersecurity** levels it has been tested against, and any known or foreseeable circumstances that could affect those levels; [Article 13]  
+     - any known or foreseeable circumstance (including reasonably foreseeable misuse) that could create risks to health, safety or fundamental rights; [Article 13]  
+     - the **technical capabilities** that allow the system to explain its output (where applicable); [Article 13]  
+     - the system’s performance with respect to specific persons or groups (where applicable). [Article 13]  
+
+3. **Human oversight**  
+   * The system must be designed with **human‑machine‑interface tools** that enable natural persons to **effectively oversee** the system while it is in use. [Article 14]  
+   * Human oversight must aim to **prevent or minimise risks** to health, safety or fundamental rights that could arise from normal use or reasonably foreseeable misuse, especially when such risks remain despite other safeguards. [Article 14]  
+   * Oversight measures must be **commensurate with the risk level, degree of autonomy and context of use**, and may be implemented either:  
+     - as measures built into the system by the provider before market placement, or  
+     - as measures identified by the provider for deployment. [Article 14]  
+
+4. **Risk‑management system**  
+   * Providers must implement a **risk‑management system** that evaluates hazards, ensures the **overall residual risk is acceptable**, and applies:  
+     - **design and development actions** to eliminate or reduce risks as far as technically feasible; [Article 9]  
+     - **mitigation and control measures** for risks that cannot be eliminated; [Article 9]  
+     - **information provision** (as required by Article 13) and, where appropriate, **training** for deployers. [Article 9]  
+   * The risk‑management approach must take into account the **technical knowledge, experience, education and training of the deployer**, as well as the **presumed context of use**. [Article 9]  
+
+Together, these provisions constitute the core set of **legal and technical obligations** that high‑risk AI systems must satisfy under the EU AI Act.","High-risk AI systems must meet requirements including risk management (Article 9), data governance (Article 10), technical documentation (Article 11), transparency and provision of information to deployers (Article 13), human oversight (Article 14), and accuracy, robustness and cybersecurity (Article 15).",1.0,0.9166666666361112,0.6666666666666666,0.8385607882486212
+What AI systems are classified as high-risk under Annex III?,"The provided excerpt does not include the contents of Annex III, so it does not specify which AI systems are classified as high‑risk under that annex. Therefore, based on the given context, I cannot determine the specific AI systems listed in Annex III.","Annex III lists high-risk use cases including biometric identification, management of critical infrastructure, education and vocational training, employment and worker management, access to essential services, law enforcement, migration and border control, and administration of justice.",1.0,0.0,0.0,0.0
+What penalties apply for non-compliance with the AI Act?,"The EU AI Act provides several layers of monetary penalties that may be applied when its rules are breached:
+
+* **Member‑State penalties** – Each Member State must adopt rules on penalties (including warnings and non‑monetary measures) that are “effective, proportionate and dissuasive” and take SMEs’ economic viability into account【Article 99】. The rules must be notified to the Commission【Article 99】.
+
+* **Violations of the prohibition of AI practices (Article 5)** – Administrative fines of up to **EUR 35 000 000**, or **7 % of the undertaking’s total worldwide annual turnover** for the preceding financial year, whichever is higher【Article 99】.
+
+* **Other operator‑related breaches** (e.g., obligations of providers, authorised representatives, importers, distributors, deployers, and other requirements not covered by Article 5) – Administrative fines of up to **EUR 15 000 000**, or **3 % of the undertaking’s total worldwide annual turnover** for the preceding financial year, whichever is higher【Article 99】.
+
+* **Fines for providers of general‑purpose AI models** – The European Commission may impose fines of up to **3 % of the provider’s annual total worldwide turnover** in the preceding financial year, or **EUR 15 000 000**, whichever is higher, when the provider intentionally or negligently:
+  * infringes the Regulation;
+  * fails to comply with a document or information request under Article 91 or provides false information;
+  * fails to comply with a measure requested under Article 93;
+  * refuses to give the Commission access to the model for evaluation under Article 92【Article 101】.
+
+These penalties are to be fixed taking into account the nature, gravity and duration of the infringement, in line with the principles of proportionality and appropriateness【Article 101】.","Penalties vary by violation type, with the highest fines reaching up to 35 million EUR or 7% of global annual turnover for violations involving prohibited AI practices.",1.0,0.3333333333,1.0,0.7752811790302372
+What is required in the technical documentation for high-risk AI systems?,"The technical documentation that a provider must prepare for a high‑risk AI system has to contain the information set out in **Article 13** and the elements of the quality‑management system required by **Article 17**:
+
+* **Purpose and performance data** – the system’s intended purpose; the level of accuracy together with the metrics used, its robustness and cybersecurity, and any known or foreseeable circumstances that could affect these levels [Article 13];  
+* **Risk‑related information** – any known or foreseeable circumstances (including reasonably foreseeable misuse) that could create health‑, safety‑ or fundamental‑rights risks [Article 13];  
+* **Technical characteristics** – the technical capabilities and characteristics that allow the output to be explained; performance data for specific persons or groups when relevant [Article 13];  
+* **Data‑set specifications** – details of the input data and any other relevant information about the training, validation and testing data sets, taking the intended purpose into account [Article 13];  
+* **Interpretability aids** – information that enables deployers to interpret the system’s output and use it appropriately [Article 13];  
+* **Change and performance history** – any changes to the system and its performance that were predetermined at the initial conformity assessment [Article 13];  
+* **Human‑oversight measures** – the human‑oversight measures required by Article 14, including technical measures that help deployers interpret the outputs [Article 13];  
+* **Operational requirements** – the computational and hardware resources needed, the expected lifetime of the system, and the maintenance and care measures (including their frequency) required to keep the system operating safely [Article 13].
+
+In addition, the documentation must include a **quality‑management system** that is recorded in written policies, procedures and instructions and covers at least:
+
+* a compliance‑strategy covering conformity‑assessment and modification management [Article 17(a)];  
+* the techniques, procedures and systematic actions for design control and design verification [Article 17(b)];  
+* the techniques, procedures and systematic actions for development, quality control and quality assurance [Article 17(c)];  
+* the examination, test and validation procedures to be carried out before, during and after development, together with their frequency [Article 17(d)].
+
+These elements together constitute the required technical documentation for high‑risk AI systems.","Annex IV specifies the technical documentation requirements, including a general description of the system, detailed design specifications, and information on monitoring, functioning and control of the system.",1.0,0.7499999999625,0.0,0.9506989944540626
+What obligations do providers of general-purpose AI models have?,"Providers of general‑purpose AI models must meet the following obligations under the EU AI Act:
+
+* **Technical documentation** – They must draw up and keep up‑to‑date the technical documentation of the model, including its training and testing processes and the results of its evaluation, and contain at least the information listed in Annex XI. This documentation must be provided, on request, to the AI Office and the national competent authorities. [Article 53]
+
+* **Information for downstream users** – They must prepare, keep up‑to‑date and make available information and documentation for providers of AI systems that intend to integrate the general‑purpose model. The information must enable those downstream providers to understand the model’s capabilities and limitations and to fulfil their own obligations under the Regulation. [Article 53]
+
+* **Co‑operation with authorities** – They must cooperate as necessary with the European Commission and the national competent authorities in the exercise of their competences and powers under the Regulation. [Article 53]
+
+* **Demonstrating compliance** – They may rely on an approved code of practice (Article 56) to demonstrate compliance with the obligations in paragraph 1 until a European harmonised standard is published. Compliance with a European harmonised standard gives a presumption of conformity for the covered obligations. If they do not follow an approved code of practice or a harmonised standard, they must provide alternative adequate means of compliance for assessment. [Article 53]
+
+* **Systemic‑risk models** – The exemption for free and open‑source models does **not** apply to general‑purpose AI models that present systemic risks; such models are therefore required to fulfil the above obligations as well. [Article 54] (exception clause)","Providers of general-purpose AI models must maintain technical documentation, provide information to downstream providers, and comply with EU copyright law, among other obligations set out in the relevant articles.",1.0,0.9166666666361112,1.0,0.8661119659579268
