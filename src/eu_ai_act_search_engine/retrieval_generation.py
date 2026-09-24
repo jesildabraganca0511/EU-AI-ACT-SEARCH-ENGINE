@@ -17,7 +17,7 @@ CHROMA_PATH= PROJECT_ROOT / "src" / "eu_ai_act_search_engine" / "results" / "chr
 COLLECTION_NAME = "eu_ai_act_articles"
 
 
-GROQ_MODEL = "llama-3.3-70b-versatile"           # fast + cheap, good for a baseline
+GROQ_MODEL = "openai/gpt-oss-120b"           # fast + cheap, good for a baseline
 TOP_K = 5
  
  
