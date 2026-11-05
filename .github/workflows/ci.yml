@@ -1,0 +1,50 @@
+# Fast checks on every push/PR: install with uv, lint, import check, unit tests.
+# No paid API calls here.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # Dummy key so modules that read it at import time don't crash.
+      # Tests that genuinely call an LLM should be marked @pytest.mark.integration.
+      GROQ_API_KEY: gsk_dummy-key-for-ci
+    steps:
+      - uses: actions/checkout@v5
+
+      # uv reads .python-version and uv.lock, so CI uses the same versions as your laptop.
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Install dependencies (exactly as locked)
+        run: uv sync --frozen --all-groups
+
+      - name: Lint (ruff)
+        run: |
+          uvx ruff check .
+          uvx ruff format --check .
+
+      - name: Package imports
+        run: uv run python -c "import eu_ai_act_search_engine"
+
+      - name: Unit tests
+        run: |
+          if [ -d tests ]; then
+            uv run --with pytest pytest -m "not integration" -q
+          else
+            echo "No tests/ folder yet - skipping."
+          fi

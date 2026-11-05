@@ -3,6 +3,7 @@ Ragas >= 0.4 evaluation using the collections API, with Groq as the judge LLM.
 
 Install:  pip install "ragas>=0.4.3" openai sentence-transformers python-dotenv pandas
 """
+
 import json
 import math
 import os
@@ -11,7 +12,6 @@ import time
 import pandas as pd
 from dotenv import load_dotenv
 from openai import AsyncOpenAI
-
 from ragas.embeddings import embedding_factory
 from ragas.llms import llm_factory
 from ragas.metrics.collections import (
@@ -67,15 +67,17 @@ for i, r in enumerate(eval_results):
 groq_client = AsyncOpenAI(
     api_key=os.environ["GROQ_API_KEY"],
     base_url="https://api.groq.com/openai/v1",
-    max_retries=5,   # the client retries 429s with backoff
+    max_retries=5,  # the client retries 429s with backoff
     timeout=120.0,
 )
 
 
 # Fail fast if the model isn't available, instead of erroring on every row
-from openai import OpenAI  # noqa: E402
+from openai import OpenAI
 
-_sync = OpenAI(api_key=os.environ["GROQ_API_KEY"], base_url="https://api.groq.com/openai/v1")
+_sync = OpenAI(
+    api_key=os.environ["GROQ_API_KEY"], base_url="https://api.groq.com/openai/v1"
+)
 _available = {m.id for m in _sync.models.list().data}
 if EVAL_MODEL not in _available:
     raise SystemExit(
@@ -87,8 +89,8 @@ llm = llm_factory(
     EVAL_MODEL,
     client=groq_client,
     temperature=0.0,
-    max_tokens=4096,           # reasoning tokens count toward this
-    reasoning_effort="low",    # if this raises a TypeError/unexpected-kwarg error, delete this line
+    max_tokens=4096,  # reasoning tokens count toward this
+    reasoning_effort="low",  # if this raises a TypeError/unexpected-kwarg error, delete this line
 )
 
 # ------------------------------------------------------------
@@ -110,7 +112,9 @@ embeddings = embedding_factory(
 faithfulness = Faithfulness(llm=llm)
 context_precision = ContextPrecision(llm=llm)
 context_recall = ContextRecall(llm=llm)
-answer_relevancy = AnswerRelevancy(llm=llm, embeddings=embeddings, strictness=1)  # Groq rejects n>1
+answer_relevancy = AnswerRelevancy(
+    llm=llm, embeddings=embeddings, strictness=1
+)  # Groq rejects n>1
 
 
 def safe_score(name, fn, **kwargs):
@@ -119,7 +123,9 @@ def safe_score(name, fn, **kwargs):
         return float(fn(**kwargs).value)
     except Exception as e:  # noqa: BLE001
         msg = str(e)
-        if any(s in msg for s in ("model_not_found", "invalid_api_key", "Error code: 401")):
+        if any(
+            s in msg for s in ("model_not_found", "invalid_api_key", "Error code: 401")
+        ):
             raise SystemExit(f"Fatal config error, stopping: {msg[:300]}")
         print(f"   [!] {name} failed: {type(e).__name__}: {msg[:200]}")
         return math.nan
@@ -147,24 +153,35 @@ def run_ragas_evaluation():
                 "response": a,
                 "reference": ref,
                 "faithfulness": score_if_missing(
-                    "faithfulness", faithfulness.score,
+                    "faithfulness",
+                    faithfulness.score,
                     previous.get("faithfulness"),
-                    user_input=q, response=a, retrieved_contexts=ctx,
+                    user_input=q,
+                    response=a,
+                    retrieved_contexts=ctx,
                 ),
                 "context_precision": score_if_missing(
-                    "context_precision", context_precision.score,
+                    "context_precision",
+                    context_precision.score,
                     previous.get("context_precision"),
-                    user_input=q, reference=ref, retrieved_contexts=ctx,
+                    user_input=q,
+                    reference=ref,
+                    retrieved_contexts=ctx,
                 ),
                 "context_recall": score_if_missing(
-                    "context_recall", context_recall.score,
+                    "context_recall",
+                    context_recall.score,
                     previous.get("context_recall"),
-                    user_input=q, reference=ref, retrieved_contexts=ctx,
+                    user_input=q,
+                    reference=ref,
+                    retrieved_contexts=ctx,
                 ),
                 "answer_relevancy": score_if_missing(
-                    "answer_relevancy", answer_relevancy.score,
+                    "answer_relevancy",
+                    answer_relevancy.score,
                     previous.get("answer_relevancy"),
-                    user_input=q, response=a,
+                    user_input=q,
+                    response=a,
                 ),
             }
         )
@@ -182,6 +199,11 @@ if __name__ == "__main__":
     print("\n" + "=" * 60)
     print("MEAN METRIC SCORES (NaN rows skipped)")
     print("=" * 60)
-    for metric in ["faithfulness", "context_precision", "context_recall", "answer_relevancy"]:
+    for metric in [
+        "faithfulness",
+        "context_precision",
+        "context_recall",
+        "answer_relevancy",
+    ]:
         n_nan = results_df[metric].isna().sum()
         print(f"{metric:20s}: {results_df[metric].mean():.4f}   (NaN rows: {n_nan})")

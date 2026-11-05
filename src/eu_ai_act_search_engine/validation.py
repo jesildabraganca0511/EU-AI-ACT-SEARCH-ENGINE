@@ -1,8 +1,8 @@
-from pydantic import BaseModel, Field, ValidationError,ConfigDict, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
+
 
 class Article(BaseModel):
-    model_config=ConfigDict(
-        extra="forbid")
+    model_config = ConfigDict(extra="forbid")
 
     article_number: str = Field(..., min_length=1, max_length=20)
     article_title: str = Field(..., min_length=1, max_length=200)
@@ -18,8 +18,7 @@ class Article(BaseModel):
 
 
 class Chunk(BaseModel):
-    model_config=ConfigDict(
-        extra="forbid")
+    model_config = ConfigDict(extra="forbid")
 
     text: str = Field(..., min_length=1)
     article_number: str = Field(..., min_length=1, max_length=20)
@@ -37,8 +36,7 @@ class Chunk(BaseModel):
 
 
 class SearchQuery(BaseModel):
-    model_config=ConfigDict(
-        extra="forbid")
+    model_config = ConfigDict(extra="forbid")
 
     query: str = Field(..., min_length=1, max_length=2000)
     top_k: int = Field(..., ge=1, le=50)

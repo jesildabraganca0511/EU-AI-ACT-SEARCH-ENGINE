@@ -1,9 +1,7 @@
 import json
-import time 
+import time
 
 from .retrieval_generation import ask
-
-
 
 EVAL_QUESTIONS = [
     {
@@ -181,7 +179,7 @@ EVAL_QUESTIONS = [
 ]
 
 EVAL_QUESTION_LIMIT = 5
- 
+
 
 def run_eval_set():
     results = []
@@ -189,21 +187,22 @@ def run_eval_set():
         print(f"Running: {item['question']}")
         try:
             result = ask(item["question"])
-            results.append({
-                "question": result["query"],
-                "answer": result["answer"],
-                "contexts": result["contexts"],
-                "ground_truth": item["ground_truth"],
-            })
-        except Exception as e:
+            results.append(
+                {
+                    "question": result["query"],
+                    "answer": result["answer"],
+                    "contexts": result["contexts"],
+                    "ground_truth": item["ground_truth"],
+                }
+            )
+        except Exception as e:  # noqa: BLE001
             print(f"  FAILED: {e}")
 
-        time.sleep(13)   # 5 requests/minute = 1 every 12s minimum; 13s gives headroom
+        time.sleep(13)  # 5 requests/minute = 1 every 12s minimum; 13s gives headroom
 
         with open("eval_results.json", "w", encoding="utf-8") as f:
             json.dump(results, f, indent=2, ensure_ascii=False)
- 
- 
-if __name__ == "__main__":
-    run_eval_set()    
 
+
+if __name__ == "__main__":
+    run_eval_set()
