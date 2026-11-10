@@ -5,17 +5,12 @@ import chromadb
 from chromadb.errors import NotFoundError
 from sentence_transformers import SentenceTransformer
 
+from .paths import CHROMA_PATH, CHUNKS_PATH
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-INPUT_PATH = (
-    PROJECT_ROOT
-    / "src"
-    / "eu_ai_act_search_engine"
-    / "results"
-    / "eu_ai_output_chunked.json"
-)
+INPUT_PATH = CHUNKS_PATH
 
 EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2"
-CHROMA_PATH = PROJECT_ROOT / "src" / "eu_ai_act_search_engine" / "results" / "chroma_db"
 COLLECTION_NAME = "eu_ai_act_articles"
 
 

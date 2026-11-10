@@ -1,25 +1,23 @@
 import json
 import re
-from pathlib import Path
 
 import requests
 from langchain_community.document_loaders import PyPDFLoader
 
+from .paths import ARTICLES_PATH, PDF_PATH
 from .validation import Article
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
 PDF_URL = "https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:32024R1689"
 LOCAL_FILE = None
-LOCAL_PATH = PROJECT_ROOT / "eu_ai_act.pdf"
-OUTPUT_PATH = (
-    PROJECT_ROOT / "src" / "eu_ai_act_search_engine" / "results" / "eu_ai_output.json"
-)
+LOCAL_PATH = PDF_PATH
+OUTPUT_PATH = ARTICLES_PATH
 
 
 def get_pdf():
     if LOCAL_PATH.exists():
         print(f"Using local pdf from{LOCAL_PATH}")
         return LOCAL_PATH
+    PDF_PATH.parent.mkdir(parents=True, exist_ok=True)
 
     print("Downloading AI Act PDF from EUR-Lex...")
     response = requests.get(PDF_URL, timeout=300)

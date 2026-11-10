@@ -1,26 +1,17 @@
 import os
 import time
-from pathlib import Path
 
 import chromadb
 from dotenv import load_dotenv
 from groq import Groq
 from sentence_transformers import SentenceTransformer
 
+from .paths import CHROMA_PATH
+
 load_dotenv()
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-INPUT_PATH = (
-    PROJECT_ROOT
-    / "src"
-    / "eu_ai_act_search_engine"
-    / "results"
-    / "eu_ai_output_chunked.json"
-)
-
 EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2"
-CHROMA_PATH = PROJECT_ROOT / "src" / "eu_ai_act_search_engine" / "results" / "chroma_db"
 COLLECTION_NAME = "eu_ai_act_articles"
 
 
@@ -31,7 +22,7 @@ TOP_K = 5
 # --- Setup (runs once) ---------------------------------------------------
 
 embedding_model = SentenceTransformer(EMBEDDING_MODEL_NAME)
-chroma_client = chromadb.PersistentClient(path=CHROMA_PATH)
+chroma_client = chromadb.PersistentClient(CHROMA_PATH)
 collection = chroma_client.get_collection(COLLECTION_NAME)
 
 # Reads GROQ_API_KEY from the environment automatically.

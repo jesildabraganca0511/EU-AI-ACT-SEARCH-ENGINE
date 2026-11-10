@@ -1,17 +1,11 @@
 import json
 from pathlib import Path
 
+from .paths import ARTICLES_PATH, CHUNKS_PATH
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-INPUT_PATH = (
-    PROJECT_ROOT / "src" / "eu_ai_act_search_engine" / "results" / "eu_ai_output.json"
-)
-OUTPUT_PATH = (
-    PROJECT_ROOT
-    / "src"
-    / "eu_ai_act_search_engine"
-    / "results"
-    / "eu_ai_output_chunked.json"
-)
+INPUT_PATH = ARTICLES_PATH
+OUTPUT_PATH = CHUNKS_PATH
 
 
 def chunk_text(text, chunk_size=1000, overlap=100):
